@@ -1,0 +1,226 @@
+import { Role } from '@forge-loom/shared-types';
+import type { Role as PrismaRole } from '@prisma/client';
+import { prisma } from '../../config/prisma.js';
+import { ApiError } from '../../utils/ApiError.js';
+import { toPrismaEnum } from '../../utils/prismaEnum.js';
+import type {
+  CreateCourseInput,
+  ListCoursesQuery,
+  UpdateCourseInput,
+} from './course.validation.js';
+import type { CourseWithSyllabus } from './courseAccess.js';
+
+type CourseStatus = 'draft' | 'published' | 'archived';
+
+// draft -> published -> archived only. There's no stated use case for moving
+// backwards (e.g. un-publishing), so that's rejected rather than silently
+// allowed — disclosed here since the roadmap didn't spell out the transition
+// rules explicitly.
+const ALLOWED_STATUS_TRANSITIONS: Record<CourseStatus, CourseStatus[]> = {
+  draft: ['published'],
+  published: ['archived'],
+  archived: [],
+};
+
+const SYLLABUS_INCLUDE = { syllabus: { orderBy: { dayNumber: 'asc' as const } } };
+
+async function getOwnCourseAdminProfile(userId: string) {
+  const profile = await prisma.courseAdminProfile.findUnique({ where: { userId } });
+  if (!profile) {
+    throw new ApiError(404, 'Course admin profile not found');
+  }
+  return profile;
+}
+
+async function getOwnedCourse(
+  courseId: string,
+  courseAdminProfileId: string
+): Promise<CourseWithSyllabus> {
+  const course = await prisma.course.findUnique({ where: { id: courseId }, include: SYLLABUS_INCLUDE });
+  if (!course) {
+    throw new ApiError(404, 'Course not found');
+  }
+  if (course.createdBy !== courseAdminProfileId) {
+    throw new ApiError(403, 'You do not have access to this course');
+  }
+  return course;
+}
+
+async function resolveTrainerId(trainerEmail: string): Promise<string> {
+  const trainer = await prisma.user.findFirst({
+    where: { email: trainerEmail, role: toPrismaEnum<PrismaRole>(Role.Trainer) },
+  });
+  if (!trainer) {
+    throw new ApiError(400, `No trainer account found for ${trainerEmail}`);
+  }
+  return trainer.id;
+}
+
+export async function createCourse(
+  userId: string,
+  input: CreateCourseInput
+): Promise<CourseWithSyllabus> {
+  const profile = await getOwnCourseAdminProfile(userId);
+
+  const syllabus = (input.syllabus ?? []).map((day) => ({
+    dayNumber: day.dayNumber,
+    title: day.title,
+    description: day.description,
+    youtubeVideoId: day.youtubeVideoId ?? null,
+  }));
+
+  const trainerId = input.trainerEmail ? await resolveTrainerId(input.trainerEmail) : null;
+
+  return prisma.course.create({
+    data: {
+      title: input.title,
+      description: input.description,
+      createdBy: profile.id,
+      deliveryMode: input.deliveryMode,
+      durationHours: input.durationHours,
+      durationDays: input.durationDays,
+      price: input.price,
+      currency: input.currency ?? 'INR',
+      status: 'draft',
+      trainerId,
+      syllabus: { create: syllabus },
+    },
+    include: SYLLABUS_INCLUDE,
+  });
+}
+
+export async function updateCourse(
+  userId: string,
+  courseId: string,
+  input: UpdateCourseInput
+): Promise<CourseWithSyllabus> {
+  const profile = await getOwnCourseAdminProfile(userId);
+  await getOwnedCourse(courseId, profile.id);
+
+  const trainerId =
+    input.trainerEmail !== undefined ? await resolveTrainerId(input.trainerEmail) : undefined;
+
+  const fieldUpdates = {
+    ...(input.title !== undefined && { title: input.title }),
+    ...(input.description !== undefined && { description: input.description }),
+    ...(input.deliveryMode !== undefined && { deliveryMode: input.deliveryMode }),
+    ...(input.durationHours !== undefined && { durationHours: input.durationHours }),
+    ...(input.durationDays !== undefined && { durationDays: input.durationDays }),
+    ...(input.price !== undefined && { price: input.price }),
+    ...(input.currency !== undefined && { currency: input.currency }),
+    ...(trainerId !== undefined && { trainerId }),
+  };
+
+  if (input.syllabus !== undefined) {
+    // Wholesale replace, matching the original Mongoose behavior exactly —
+    // the whole syllabus array was always overwritten, never patched
+    // incrementally.
+    const newSyllabus = input.syllabus.map((day) => ({
+      dayNumber: day.dayNumber,
+      title: day.title,
+      description: day.description,
+      youtubeVideoId: day.youtubeVideoId ?? null,
+    }));
+    await prisma.$transaction([
+      prisma.syllabusDay.deleteMany({ where: { courseId } }),
+      prisma.course.update({
+        where: { id: courseId },
+        data: { ...fieldUpdates, syllabus: { create: newSyllabus } },
+      }),
+    ]);
+  } else if (Object.keys(fieldUpdates).length > 0) {
+    await prisma.course.update({ where: { id: courseId }, data: fieldUpdates });
+  }
+
+  return prisma.course.findUniqueOrThrow({ where: { id: courseId }, include: SYLLABUS_INCLUDE });
+}
+
+export async function updateCourseStatus(
+  userId: string,
+  courseId: string,
+  nextStatus: CourseStatus
+): Promise<CourseWithSyllabus> {
+  const profile = await getOwnCourseAdminProfile(userId);
+  const course = await getOwnedCourse(courseId, profile.id);
+
+  const allowed = ALLOWED_STATUS_TRANSITIONS[course.status as CourseStatus];
+  if (!allowed.includes(nextStatus)) {
+    throw new ApiError(400, `Cannot move a course from "${course.status}" to "${nextStatus}"`);
+  }
+
+  return prisma.course.update({
+    where: { id: courseId },
+    data: { status: nextStatus },
+    include: SYLLABUS_INCLUDE,
+  });
+}
+
+export async function listMyCourses(userId: string): Promise<CourseWithSyllabus[]> {
+  const profile = await getOwnCourseAdminProfile(userId);
+  return prisma.course.findMany({
+    where: { createdBy: profile.id },
+    orderBy: { createdAt: 'desc' },
+    include: SYLLABUS_INCLUDE,
+  });
+}
+
+export async function listTeachingCourses(trainerUserId: string): Promise<CourseWithSyllabus[]> {
+  return prisma.course.findMany({
+    where: { trainerId: trainerUserId },
+    orderBy: { createdAt: 'desc' },
+    include: SYLLABUS_INCLUDE,
+  });
+}
+
+export interface CourseListPage {
+  courses: CourseWithSyllabus[];
+  nextCursor: string | null;
+}
+
+export async function listPublishedCourses(query: ListCoursesQuery): Promise<CourseListPage> {
+  const limit = query.limit ?? 20;
+
+  const rows = await prisma.course.findMany({
+    where: {
+      status: 'published',
+      ...(query.deliveryMode && { deliveryMode: query.deliveryMode }),
+      ...(query.cursor && { createdAt: { lt: new Date(query.cursor) } }),
+    },
+    orderBy: { createdAt: 'desc' },
+    take: limit + 1,
+    include: SYLLABUS_INCLUDE,
+  });
+
+  const hasMore = rows.length > limit;
+  const courses = hasMore ? rows.slice(0, limit) : rows;
+  const last = courses[courses.length - 1];
+
+  return {
+    courses,
+    nextCursor: hasMore && last ? last.createdAt.toISOString() : null,
+  };
+}
+
+export async function getCourseById(
+  courseId: string,
+  viewer: { userId: string; role: string }
+): Promise<CourseWithSyllabus> {
+  const course = await prisma.course.findUnique({ where: { id: courseId }, include: SYLLABUS_INCLUDE });
+  if (!course) {
+    throw new ApiError(404, 'Course not found');
+  }
+
+  if (course.status === 'published') {
+    return course;
+  }
+
+  // Non-published courses are only visible to the course_admin who owns them.
+  if (viewer.role === 'course_admin') {
+    const profile = await prisma.courseAdminProfile.findUnique({ where: { userId: viewer.userId } });
+    if (profile && course.createdBy === profile.id) {
+      return course;
+    }
+  }
+
+  throw new ApiError(404, 'Course not found');
+}

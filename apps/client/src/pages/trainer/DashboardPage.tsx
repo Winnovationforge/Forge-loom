@@ -1,0 +1,194 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  BookOpenCheck,
+  CalendarClock,
+  ClipboardCheck,
+  Layers,
+  Laptop,
+  MapPin,
+  Users,
+} from 'lucide-react';
+import {
+  useTrainerStats,
+  useTrainerStudents,
+  useTrainerSubmissions,
+} from '../../features/trainer/data';
+import { useMyTeams, useTeachingCourses } from '../../features/trainer/hooks';
+import { Card } from '../../components/ui/Card';
+import { StatCard } from '../../components/ui/StatCard';
+import { Badge } from '../../components/ui/Badge';
+import { Button } from '../../components/ui/Button';
+import { Input } from '../../components/ui/Input';
+import { PageLoading } from '../../components/ui/PageLoading';
+
+export function DashboardPage() {
+  const { data: stats, isLoading: statsLoading } = useTrainerStats();
+  const { data: students, isLoading: studentsLoading } = useTrainerStudents();
+  const { data: courses, isLoading: coursesLoading } = useTeachingCourses();
+  const { data: submissions, isLoading: submissionsLoading } = useTrainerSubmissions();
+  const { data: teams, isLoading: teamsLoading } = useMyTeams();
+
+  const [grades, setGrades] = useState<Record<string, string>>({});
+  const [graded, setGraded] = useState<Record<string, boolean>>({});
+
+  if (statsLoading || studentsLoading || coursesLoading || submissionsLoading || teamsLoading) {
+    return <PageLoading />;
+  }
+
+  return (
+    <div>
+      <h1 className="mb-1 text-xl font-semibold text-slate-900">Trainer Dashboard</h1>
+      <p className="mb-6 text-sm text-slate-500">
+        Your students, courses, and assignments in one place.
+      </p>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <StatCard
+          image="/images/dashboard/students.svg"
+          label="Students Assigned"
+          value={String(stats?.studentsAssigned ?? 0)}
+        />
+        <StatCard
+          image="/images/dashboard/courses.svg"
+          label="Courses Teaching"
+          value={String(stats?.coursesTeaching ?? 0)}
+        />
+        <StatCard
+          image="/images/dashboard/clock.svg"
+          label="Sessions Today"
+          value={String(stats?.sessionsToday ?? 0)}
+        />
+        <StatCard
+          image="/images/dashboard/tasks.svg"
+          label="Pending Grading"
+          value={String(stats?.pendingGrading ?? 0)}
+        />
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card>
+          <h2 className="mb-4 font-semibold text-slate-900">Assigned Students</h2>
+          <div className="flex flex-col divide-y divide-slate-100">
+            {students?.map((student) => (
+              <div
+                key={student.id}
+                className="flex items-center justify-between gap-2 py-3 first:pt-0 last:pb-0"
+              >
+                <div>
+                  <p className="text-sm font-medium text-slate-800">{student.name}</p>
+                  <p className="text-xs text-slate-500">{student.course}</p>
+                </div>
+                <div className="text-right text-xs text-slate-500">
+                  <p>Score: {student.score}</p>
+                  <p className="text-slate-400">{student.lastActivityLabel}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        <Card>
+          <h2 className="mb-4 font-semibold text-slate-900">Courses You Teach</h2>
+          <div className="flex flex-col gap-3">
+            {courses?.length === 0 && (
+              <p className="text-sm text-slate-400">
+                No courses assigned to you yet — a Course Admin needs to assign you as the trainer.
+              </p>
+            )}
+            {courses?.map((course) => (
+              <Link
+                key={course.id}
+                to={`/trainer/courses/${course.id}`}
+                className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 p-3 hover:bg-slate-50"
+              >
+                <div>
+                  <p className="text-sm font-medium text-slate-800">{course.title}</p>
+                  <p className="mt-0.5 flex items-center gap-1 text-xs text-slate-500">
+                    {course.deliveryMode === 'online' ? <Laptop size={12} /> : <MapPin size={12} />}
+                    {course.deliveryMode === 'online' ? 'Online' : 'Offline'}
+                  </p>
+                </div>
+                <Badge tone={course.status === 'published' ? 'green' : 'slate'}>
+                  {course.status}
+                </Badge>
+              </Link>
+            ))}
+          </div>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <h2 className="mb-4 font-semibold text-slate-900">Assignment Submissions</h2>
+          <div className="flex flex-col divide-y divide-slate-100">
+            {submissions?.map((submission) => {
+              const isGraded = submission.status === 'graded' || graded[submission.id];
+              return (
+                <div
+                  key={submission.id}
+                  className="flex flex-wrap items-center justify-between gap-3 py-3 first:pt-0 last:pb-0"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-slate-800">
+                      {submission.assignmentTitle}
+                    </p>
+                    <p className="text-xs text-slate-500">
+                      {submission.studentName} · Submitted {submission.submittedLabel}
+                    </p>
+                  </div>
+                  {isGraded ? (
+                    <Badge tone="green">Graded {submission.grade ?? grades[submission.id]}%</Badge>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number"
+                        min={0}
+                        max={100}
+                        placeholder="Grade"
+                        className="w-20"
+                        value={grades[submission.id] ?? ''}
+                        onChange={(e) =>
+                          setGrades((prev) => ({ ...prev, [submission.id]: e.target.value }))
+                        }
+                      />
+                      <Button
+                        variant="secondary"
+                        disabled={!grades[submission.id]}
+                        onClick={() => setGraded((prev) => ({ ...prev, [submission.id]: true }))}
+                      >
+                        Submit Grade
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        <Card className="lg:col-span-2">
+          <h2 className="mb-4 flex items-center gap-2 font-semibold text-slate-900">
+            <Layers size={16} /> Teams Connection
+          </h2>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {teams?.length === 0 && (
+              <p className="text-sm text-slate-400 sm:col-span-2">
+                No teams assigned to you yet — a College Admin manages team assignments.
+              </p>
+            )}
+            {teams?.map((team) => (
+              <div key={team.id} className="rounded-xl border border-slate-200 p-3">
+                <p className="text-sm font-medium text-slate-900">{team.name}</p>
+                <p className="text-xs text-slate-500">
+                  {team.members.length} member{team.members.length === 1 ? '' : 's'}
+                </p>
+                <Badge tone={team.mentorId ? 'blue' : 'slate'}>
+                  {team.mentorId ? 'Mentor assigned' : 'No mentor yet'}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        </Card>
+      </div>
+    </div>
+  );
+}
