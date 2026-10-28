@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FORGE Loom LMS — 12 Roles & Permissions Directory</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    @page {
+      size: A4 portrait;
+      margin: 14mm 12mm 14mm 12mm;
+      @bottom-right {
+        content: counter(page);
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        font-size: 8pt;
+        color: #94a3b8;
+      }
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #0f172a;
+      background: #ffffff;
+      line-height: 1.5;
+      font-size: 9.5pt;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    .page-break { page-break-after: always; break-after: page; }
+    .no-break { page-break-inside: avoid; break-inside: avoid; }
+
+    h1, h2, h3, h4 { color: #0f172a; font-weight: 700; letter-spacing: -0.02em; }
+    h1 { font-size: 20pt; line-height: 1.2; }
+    h2 { font-size: 13.5pt; margin-bottom: 8px; color: #1e3a8a; display: flex; align-items: center; gap: 8px; }
+    h3 { font-size: 10.5pt; margin-top: 10px; margin-bottom: 6px; color: #1e293b; }
+    p { margin-bottom: 8px; color: #334155; text-align: justify; }
+
+    .cover {
+      height: 250mm;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20mm 15mm 15mm 15mm;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #f8fafc 0%, #eff6ff 50%, #ffffff 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .brand-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #2563eb;
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 8.5pt;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cover-title {
+      font-size: 25pt;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.15;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+
+    .cover-subtitle {
+      font-size: 11.5pt;
+      color: #475569;
+      font-weight: 500;
+      line-height: 1.4;
+      max-width: 90%;
+    }
+
+    .meta-box {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 16px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      font-size: 8.5pt;
+    }
+
+    .meta-item strong {
+      color: #1e293b;
+      display: block;
+      font-size: 7.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+
+    .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+
+    .card-header {
+      font-weight: 700;
+      font-size: 10pt;
+      color: #1e293b;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 8px 0 12px 0;
+      font-size: 8pt;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #1e293b;
+      font-weight: 700;
+      text-align: left;
+      padding: 6px 8px;
+      border: 1px solid #cbd5e1;
+    }
+
+    td {
+      padding: 5px 8px;
+      border: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: top;
+    }
+
+    tr:nth-child(even) td { background: #f8fafc; }
+
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 7.5pt;
+      background: #f1f5f9;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: #0369a1;
+      border: 1px solid #e2e8f0;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 7pt;
+      font-weight: 600;
+    }
+
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-purple { background: #f3e8ff; color: #6b21a8; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+    .badge-slate { background: #f1f5f9; color: #475569; }
+
+    .sec-num {
+      background: #2563eb;
+      color: white;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 8.5pt;
+      font-weight: 700;
+    }
+
+    .diagram-container {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 10px;
+      margin: 8px 0 12px 0;
+      text-align: center;
+    }
+
+    .diagram-caption {
+      font-size: 7.5pt;
+      color: #64748b;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 4px;
+    }
+
+    ul, ol { margin-left: 18px; margin-bottom: 8px; color: #334155; font-size: 8.5pt; }
+    li { margin-bottom: 3px; }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== COVER PAGE ==================== -->
+  <div class="cover">
+    <div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span class="brand-tag">FORGE LOOM LMS</span>
+        <span style="font-size: 8.5pt; font-weight: 600; color: #64748b;">Security & Permissions Manual</span>
+      </div>
+      <div style="margin-top: 35mm;">
+        <h1 class="cover-title">The 12 Roles & Access Control Directory</h1>
+        <p class="cover-subtitle">
+          Comprehensive specification of all 12 distinct user roles in the FORGE Loom LMS platform—detailing tenant scoping, data access boundaries, navigation routes, operational responsibilities, and seed testing accounts.
+        </p>
+      </div>
+    </div>
+
+    <!-- Role Ecosystem SVG Map -->
+    <div style="margin: 20px 0; background: white; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px;">
+      <svg width="100%" height="110" viewBox="0 0 650 110" xmlns="http://www.w3.org/2000/svg">
+        <!-- Group 1: College Scoped (4 Roles) -->
+        <rect x="10" y="10" width="200" height="90" rx="6" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="110" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#1e3a8a" text-anchor="middle">College-Scoped (4 Roles)</text>
+        <rect x="20" y="38" width="85" height="24" rx="3" fill="#dbeafe"/>
+        <text x="62" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#1e40af" text-anchor="middle">Student</text>
+        <rect x="115" y="38" width="85" height="24" rx="3" fill="#dcfce7"/>
+        <text x="157" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#166534" text-anchor="middle">Mentor</text>
+        <rect x="20" y="68" width="85" height="24" rx="3" fill="#fef3c7"/>
+        <text x="62" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#92400e" text-anchor="middle">Trainer</text>
+        <rect x="115" y="68" width="85" height="24" rx="3" fill="#f3e8ff"/>
+        <text x="157" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#6b21a8" text-anchor="middle">CollegeAdmin</text>
+
+        <!-- Group 2: Cross-Ecosystem (6 Roles) -->
+        <rect x="225" y="10" width="235" height="90" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="1.5"/>
+        <text x="342" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#334155" text-anchor="middle">Cross-Ecosystem (6 Roles)</text>
+        <rect x="235" y="38" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="269" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">HR</text>
+        <rect x="308" y="38" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="342" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">Speaker</text>
+        <rect x="381" y="38" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="415" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">Sponsor</text>
+        <rect x="235" y="68" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="269" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">Community</text>
+        <rect x="308" y="68" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="342" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">Media</text>
+        <rect x="381" y="68" width="68" height="24" rx="3" fill="#ffffff" stroke="#cbd5e1"/>
+        <text x="415" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7" font-weight="700" fill="#475569" text-anchor="middle">Member</text>
+
+        <!-- Group 3: Platform Governance (2 Roles) -->
+        <rect x="475" y="10" width="165" height="90" rx="6" fill="#fdf2f8" stroke="#db2777" stroke-width="1.5"/>
+        <text x="557" y="28" font-family="'Plus Jakarta Sans', sans-serif" font-size="9" font-weight="700" fill="#9d174d" text-anchor="middle">Internal Governance (2)</text>
+        <rect x="485" y="38" width="145" height="24" rx="3" fill="#fce7f3"/>
+        <text x="557" y="53" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#be185d" text-anchor="middle">ForgeAdmin (Super Admin)</text>
+        <rect x="485" y="68" width="145" height="24" rx="3" fill="#fce7f3"/>
+        <text x="557" y="83" font-family="'Plus Jakarta Sans', sans-serif" font-size="7.5" font-weight="700" fill="#be185d" text-anchor="middle">CourseAdmin (Curriculum)</text>
+      </svg>
+    </div>
+
+    <div>
+      <div class="meta-box">
+        <div class="meta-item">
+          <strong>Total Defined Roles</strong>
+          <span style="font-size: 11pt; font-weight: 800; color: #2563eb;">12 Distinct Roles</span>
+        </div>
+        <div class="meta-item">
+          <strong>College-Scoped Roles</strong>
+          <span>4 Roles (Student, Mentor, Trainer, CollegeAdmin)</span>
+        </div>
+        <div class="meta-item">
+          <strong>Self-Registerable Roles</strong>
+          <span>10 Roles (ForgeAdmin & CourseAdmin are Provisioned)</span>
+        </div>
+        <div class="meta-item">
+          <strong>Universal Seed Password</strong>
+          <code>test1234</code> (Applicable to All Fixtures)
+        </div>
+      </div>
+      <div style="margin-top: 15px; font-size: 8pt; color: #94a3b8; display: flex; justify-content: space-between;">
+        <span>Published by Forge Engineering</span>
+        <span>Version 1.0.0 &bull; October 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== SECTION 1: ROLE TAXONOMY ==================== -->
+  <div style="margin-top: 6mm;">
+    <h2><span class="sec-num">1</span> Exact Role Count & Categorization</h2>
+    <p>
+      In FORGE Loom LMS, there are exactly <strong>12 system roles</strong> declared in the shared TypeScript domain package (<code>packages/shared-types/src/role.ts</code>) and mirrored in the PostgreSQL Prisma schema enum (<code>enum Role</code>).
+    </p>
+
+    <div class="grid-3" style="margin-top: 10px;">
+      <!-- Category 1 -->
+      <div class="card no-break" style="border-top: 3px solid #3b82f6;">
+        <div class="card-header">
+          <span>College-Scoped</span>
+          <span class="badge badge-blue">4 Roles</span>
+        </div>
+        <p style="font-size: 8pt; color: #475569; margin-bottom: 6px;">Data access strictly restricted to a single college tenant via <code>collegeId</code>:</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Student:</strong> Course learner & builder.</li>
+          <li><strong>Mentor:</strong> Advisory expert & reviewer.</li>
+          <li><strong>Trainer:</strong> Classroom lecture conductor.</li>
+          <li><strong>CollegeAdmin:</strong> Institutional manager.</li>
+        </ul>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="card no-break" style="border-top: 3px solid #64748b;">
+        <div class="card-header">
+          <span>Cross-Ecosystem</span>
+          <span class="badge badge-slate">6 Roles</span>
+        </div>
+        <p style="font-size: 8pt; color: #475569; margin-bottom: 6px;">Global participants with access across campus networks and talent pools:</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>HR:</strong> Corporate talent recruiter.</li>
+          <li><strong>Speaker:</strong> Keynote guest speaker.</li>
+          <li><strong>Sponsor:</strong> Innovation sprint funder.</li>
+          <li><strong>CommunityLeader:</strong> Tech organizer.</li>
+          <li><strong>MediaPartner:</strong> Press representative.</li>
+          <li><strong>Member:</strong> General community user.</li>
+        </ul>
+      </div>
+
+      <!-- Category 3 -->
+      <div class="card no-break" style="border-top: 3px solid #db2777;">
+        <div class="card-header">
+          <span>Platform Governance</span>
+          <span class="badge badge-purple">2 Roles</span>
+        </div>
+        <p style="font-size: 8pt; color: #475569; margin-bottom: 6px;">Trusted internal operators. Cannot self-register (provisioned manually):</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>ForgeAdmin:</strong> Super administrator.</li>
+          <li><strong>CourseAdmin:</strong> Curriculum author.</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-top: 12px;">Complete 12-Role Master Directory</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Role Identifier</th>
+          <th>Display Name</th>
+          <th>Category</th>
+          <th>Landing Route</th>
+          <th>Registration Mode</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><code>student</code></td>
+          <td><strong>Student</strong></td>
+          <td><span class="badge badge-blue">College Scoped</span></td>
+          <td><code>/student</code></td>
+          <td>Self-Registerable (Requires College)</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><code>mentor</code></td>
+          <td><strong>Mentor</strong></td>
+          <td><span class="badge badge-blue">College Scoped</span></td>
+          <td><code>/mentor</code></td>
+          <td>Self-Registerable (Requires College)</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><code>trainer</code></td>
+          <td><strong>Trainer</strong></td>
+          <td><span class="badge badge-blue">College Scoped</span></td>
+          <td><code>/trainer</code></td>
+          <td>Self-Registerable (Requires College)</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><code>college_admin</code></td>
+          <td><strong>College Admin</strong></td>
+          <td><span class="badge badge-blue">College Scoped</span></td>
+          <td><code>/college</code></td>
+          <td>Self-Registerable (Auto-provisions College)</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><code>hr</code></td>
+          <td><strong>HR / Recruiter</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/hr</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><code>speaker</code></td>
+          <td><strong>Speaker</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/speaker</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><code>sponsor</code></td>
+          <td><strong>Sponsor</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/sponsor</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><code>community_leader</code></td>
+          <td><strong>Community Leader</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/community</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><code>media_partner</code></td>
+          <td><strong>Media Partner</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/media</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><code>member</code></td>
+          <td><strong>Member</strong></td>
+          <td><span class="badge badge-slate">Cross-Ecosystem</span></td>
+          <td><code>/member</code></td>
+          <td>Self-Registerable</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><code>forge_admin</code></td>
+          <td><strong>Forge Admin</strong></td>
+          <td><span class="badge badge-purple">Platform Governance</span></td>
+          <td><code>/admin</code></td>
+          <td>Internal Provisioning Only</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><code>course_admin</code></td>
+          <td><strong>Course Admin</strong></td>
+          <td><span class="badge badge-purple">Platform Governance</span></td>
+          <td><code>/course-admin</code></td>
+          <td>Internal Provisioning Only</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== SECTION 2: DEEP DIVE PER ROLE ==================== -->
+  <div style="margin-top: 6mm;">
+    <h2><span class="sec-num">2</span> Granular Responsibilities & Seed Test Credentials</h2>
+    <p>
+      Every role has a dedicated persona, distinct navigation hierarchy, data permissions, and a pre-configured seed test account using the universal password: <code>test1234</code>.
+    </p>
+
+    <!-- Role 1 & 2 -->
+    <div class="grid-2">
+      <div class="card no-break">
+        <div class="card-header">
+          <span>1. Student (<code>student</code>)</span>
+          <span class="badge badge-blue">Cluster 1 & 2</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> College undergraduate builder developing technical and entrepreneurial competency.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Enrolls in courses, watches lessons, completes assignments, submits Citadel Sprint milestones, books 1-on-1 mentor sessions, and generates PDF certificates.</li>
+          <li><strong>Data Scoping:</strong> Read-only access to enrolled courses; write access to own submissions and bookings.</li>
+          <li><strong>Seed Fixtures:</strong> <code>student1@forgeloom.dev</code> (FIT) & <code>student2@forgeloom.dev</code> (Riverside).</li>
+        </ul>
+      </div>
+
+      <div class="card no-break">
+        <div class="card-header">
+          <span>2. Mentor (<code>mentor</code>)</span>
+          <span class="badge badge-green">Cluster 1 & 2</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Industry practitioner guiding students through innovation sprints.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Inspects assigned mentees, reviews Citadel team sprint deliverables, inputs milestone evaluations, and sets 1-on-1 availability slots.</li>
+          <li><strong>Data Scoping:</strong> Scoped to assigned students and teams within their college.</li>
+          <li><strong>Seed Fixtures:</strong> <code>mentor1@forgeloom.dev</code> (FIT) & <code>mentor2@forgeloom.dev</code> (Riverside).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Role 3 & 4 -->
+    <div class="grid-2">
+      <div class="card no-break">
+        <div class="card-header">
+          <span>3. Trainer (<code>trainer</code>)</span>
+          <span class="badge badge-purple">Cluster 1 & 2</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Academic or technical educator delivering curriculum modules.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Schedules course batch sessions, logs student attendance, designs module assignments, grades student submissions, and sets module tests.</li>
+          <li><strong>Data Scoping:</strong> Scoped to enrolled students in assigned course batches.</li>
+          <li><strong>Seed Fixtures:</strong> <code>trainer1@forgeloom.dev</code> (FIT) & <code>trainer2@forgeloom.dev</code> (Riverside).</li>
+        </ul>
+      </div>
+
+      <div class="card no-break">
+        <div class="card-header">
+          <span>4. College Admin (<code>college_admin</code>)</span>
+          <span class="badge badge-amber">Cluster 1 & 2</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> University Dean, HOD, or Placement Director governing campus cohorts.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Views institution student roster, monitors faculty/trainer performance, oversees department completion rates, and tracks hiring analytics.</li>
+          <li><strong>Data Scoping:</strong> Full institutional visibility across all users sharing their <code>collegeId</code>.</li>
+          <li><strong>Seed Fixtures:</strong> <code>college1@forgeloom.dev</code> (FIT) & <code>college2@forgeloom.dev</code> (Riverside).</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Role 5 & 6 -->
+    <div class="grid-2">
+      <div class="card no-break">
+        <div class="card-header">
+          <span>5. HR / Recruiter (<code>hr</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Corporate hiring manager seeking pre-screened technical talent.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Maintains corporate profile, filters students in the Talent Pool by Builder Score (XP) and skill tags, inspects verified project portfolios, and shortlists candidates.</li>
+          <li><strong>Data Scoping:</strong> Global read access to opted-in student builder profiles across all colleges.</li>
+          <li><strong>Seed Fixture:</strong> <code>hr1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card no-break">
+        <div class="card-header">
+          <span>6. Speaker (<code>speaker</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Keynote industry speaker delivering masterclasses and guest tech talks.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Manages scheduled sessions, uploads presentation slides to S3, reviews audience feedback, proposes keynote topics, and connects with HR.</li>
+          <li><strong>Data Scoping:</strong> Scoped to assigned speaking engagements and presentation assets.</li>
+          <li><strong>Seed Fixture:</strong> <code>speaker1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== SECTION 3: ROLES 7-12 ==================== -->
+  <div style="margin-top: 6mm;">
+    <h2><span class="sec-num">3</span> Roles 7 through 12 Breakdown</h2>
+
+    <!-- Role 7 & 8 -->
+    <div class="grid-2">
+      <div class="card no-break">
+        <div class="card-header">
+          <span>7. Sponsor (<code>sponsor</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Corporate or venture partner sponsoring student innovation tracks.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Funds Citadel sprints, tracks funded project milestone submissions, reviews student demo day pitches, and gains branding across campus events.</li>
+          <li><strong>Data Scoping:</strong> Scoped to sponsored events and sponsored challenge teams.</li>
+          <li><strong>Seed Fixture:</strong> <code>sponsor1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card no-break">
+        <div class="card-header">
+          <span>8. Community Leader (<code>community_leader</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Campus lead or local tech community chapter organizer.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Organizes local tech meetups, coordinates student volunteers, facilitates peer discussions, and manages chapter outreach.</li>
+          <li><strong>Data Scoping:</strong> Access to community chapter members and public discussion feeds.</li>
+          <li><strong>Seed Fixture:</strong> <code>community1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Role 9 & 10 -->
+    <div class="grid-2">
+      <div class="card no-break">
+        <div class="card-header">
+          <span>9. Media Partner (<code>media_partner</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Journalist or media organization covering student innovation showcases.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Accesses official press releases, downloads brand media kits, and submits interview requests for top student innovators.</li>
+          <li><strong>Data Scoping:</strong> Access to public media assets and approved student press kits.</li>
+          <li><strong>Seed Fixture:</strong> <code>media1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+
+      <div class="card no-break">
+        <div class="card-header">
+          <span>10. Member (<code>member</code>)</span>
+          <span class="badge badge-slate">Cross-Ecosystem</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Tech enthusiast, self-paced learner, or alumnus.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Browses public course catalog, registers for open webinars, and participates in ecosystem community forums.</li>
+          <li><strong>Data Scoping:</strong> Read access to public events and community discussions.</li>
+          <li><strong>Seed Fixture:</strong> <code>member1@forgeloom.dev</code>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Role 11 & 12 -->
+    <div class="grid-2">
+      <div class="card no-break" style="background: #fdf2f8; border-color: #fbcfe8;">
+        <div class="card-header" style="color: #9d174d;">
+          <span>11. Forge Admin (<code>forge_admin</code>)</span>
+          <span class="badge badge-purple">Super Admin</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Executive platform director overseeing all colleges and global infrastructure.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Cross-institutional analytics, onboards new college tenants, audits global users, configures system settings, and inspects database health.</li>
+          <li><strong>Data Scoping:</strong> Complete, unconstrained global read/write across all colleges.</li>
+          <li><strong>Seed Fixture:</strong> <code>admin1@forgeloom.dev</code> (Manually seeded).</li>
+        </ul>
+      </div>
+
+      <div class="card no-break" style="background: #fdf2f8; border-color: #fbcfe8;">
+        <div class="card-header" style="color: #9d174d;">
+          <span>12. Course Admin (<code>course_admin</code>)</span>
+          <span class="badge badge-purple">Curriculum Author</span>
+        </div>
+        <p style="font-size: 8pt; margin-bottom: 4px;"><strong>Target Persona:</strong> Chief instructional designer creating certified learning tracks.</p>
+        <ul style="font-size: 7.5pt; margin-left: 14px;">
+          <li><strong>Capabilities:</strong> Authors courses, configures module and lesson hierarchies, embeds video lecture links, creates tests, and publishes to the catalog.</li>
+          <li><strong>Data Scoping:</strong> Full control over the global course catalog and curriculum data.</li>
+          <li><strong>Seed Fixture:</strong> <code>course_admin1@forgeloom.dev</code> (Manually seeded).</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-break"></div>
+
+  <!-- ==================== SECTION 4: PERMISSIONS MATRIX ==================== -->
+  <div style="margin-top: 6mm;">
+    <h2><span class="sec-num">4</span> Comprehensive 12-Role Permissions Matrix</h2>
+    <p>
+      The table below provides a cross-functional mapping of system capabilities against all 12 user roles:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 20%;">Platform Feature</th>
+          <th style="text-align: center;">Std</th>
+          <th style="text-align: center;">Mnt</th>
+          <th style="text-align: center;">Trn</th>
+          <th style="text-align: center;">Clg</th>
+          <th style="text-align: center;">HR</th>
+          <th style="text-align: center;">Spk</th>
+          <th style="text-align: center;">Spn</th>
+          <th style="text-align: center;">Cmd</th>
+          <th style="text-align: center;">Med</th>
+          <th style="text-align: center;">Mem</th>
+          <th style="text-align: center;">F-Adm</th>
+          <th style="text-align: center;">C-Adm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Watch Course Lectures</strong></td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Submit Sprint Milestones</strong></td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Grade Citadel Milestones</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Book 1-on-1 Mentor Session</strong></td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Manage Availability Slots</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Take Classroom Attendance</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Search Talent Pool (HR)</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>View College Campus Metrics</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+        <tr>
+          <td><strong>Author & Publish Courses</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+        </tr>
+        <tr>
+          <td><strong>Global System Configuration</strong></td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+          <td style="text-align: center; color: green; font-weight: bold;">Yes</td>
+          <td style="text-align: center; color: #94a3b8;">-</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card no-break" style="margin-top: 15px; background: #f8fafc; border-left: 4px solid #2563eb;">
+      <div style="font-weight: 700; color: #1e3a8a; font-size: 9pt; margin-bottom: 2px;">Repository Verification</div>
+      <p style="font-size: 8pt; margin: 0; color: #475569;">
+        Role enums are synchronized across the monorepo via <code>@forge-loom/shared-types</code> and enforced on the API via <code>apps/server/src/auth/requireRole.ts</code>.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

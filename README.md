@@ -21,6 +21,9 @@ The repository includes publication-ready, beautifully styled PDF technical docu
 
 | Document | Format | Description |
 | :--- | :---: | :--- |
+| **[The 12 Roles & Access Control Directory](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_ROLES_AND_PERMISSIONS_DIRECTORY.pdf)** | `PDF` | Detailed guide explaining all 12 platform roles (College-Scoped, Cross-Ecosystem, Governance), data boundaries, seed accounts, and complete permissions matrix. |
+| **[Product Requirements Document (PRD)](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_PRD.pdf)** | `PDF` | Core strategic product specification detailing market vision, multi-role user journeys, Citadel Innovation Incubator, and algorithmic Builder Scoring. |
+| **[Software Requirements Specification (SRS)](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_SRS.pdf)** | `PDF` | IEEE 830 standard engineering specification covering functional features, system interfaces, non-functional latency/scale benchmarks, and security rules. |
 | **[Master Architecture & Operational Manual](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_LMS_ARCHITECTURE_MANUAL.pdf)** | `PDF` | Definitive system manual covering the active tech stack, 13 production modules, multi-role seed credentials, flow diagrams, and operational commands. |
 | **[Wireframe & Screen Specification](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_WIREFRAMES_SPECIFICATION.pdf)** | `PDF` | Visual wireframe blueprints, layout regions, responsive drawer rules, and data bindings for all 11 user portals and glassmorphic modals. |
 | **[System Architecture & Scaling Guide](file:///Users/winnovation/Downloads/loom-main/docs/FORGE_LOOM_SYSTEM_ARCHITECTURE.pdf)** | `PDF` | Engineering guide detailing the PERN stack, BullMQ asynchronous score recomputation, multi-tenant row isolation, and horizontal scaling to 50k users. |
