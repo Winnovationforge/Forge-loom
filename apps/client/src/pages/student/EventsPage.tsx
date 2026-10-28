@@ -85,6 +85,18 @@ export function EventsPage() {
 
         {selected && (
           <Card>
+            <div className="relative mb-4 h-48 w-full overflow-hidden rounded-xl border border-slate-200">
+              <img
+                src="/images/forge-live/forge-classroom-wide.jpg"
+                alt="FORGE Workshop Event"
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+              <div className="absolute bottom-3 left-3 text-white">
+                <span className="text-xs font-semibold uppercase tracking-wider text-blue-300">Live Campus Event</span>
+                <p className="text-sm font-bold">WinNovation FORGE Studio</p>
+              </div>
+            </div>
             <span className="mb-2 flex items-center gap-1 text-xs font-medium text-blue-600">
               <Users size={12} /> Featured Event
             </span>
