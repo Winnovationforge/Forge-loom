@@ -39,6 +39,9 @@ export const env = {
     accessKey: required('S3_ACCESS_KEY'),
     secretKey: required('S3_SECRET_KEY'),
   },
+  resend: {
+    apiKey: process.env.RESEND_API_KEY ?? '',
+  },
   // Certificate verification links point here — the client origin, not the
   // API's own origin, since /verify/:token is meant to be a public page a
   // recruiter opens in a browser, not a raw API JSON response.
