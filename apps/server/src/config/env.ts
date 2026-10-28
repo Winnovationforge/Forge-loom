@@ -41,6 +41,7 @@ export const env = {
   },
   resend: {
     apiKey: process.env.RESEND_API_KEY ?? '',
+    contactEmail: process.env.CONTACT_EMAIL ?? 'forge@winnovation.org',
   },
   // Certificate verification links point here — the client origin, not the
   // API's own origin, since /verify/:token is meant to be a public page a
